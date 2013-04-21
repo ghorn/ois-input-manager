@@ -18,7 +18,7 @@ library
 --                     cbits/InputManager.cpp
   include-dirs:      /usr/include/OIS
                      /usr/include/OGRE
-  extra-libraries: OIS
+  extra-libraries:   OIS
 
   exposed-modules:     OISInputManager
   other-modules:       Key,
