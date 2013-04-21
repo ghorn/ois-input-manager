@@ -141,9 +141,9 @@ int InputManager::getNumOfJoysticks( void ) {
 
 bool InputManager::keyPressed( const OIS::KeyEvent &e ) {
     keyEvent_t ke = {
-        .keycode = e.key,
-        .text = e.text,
-        .pressedReleased = 0
+        e.key, // keycode
+        e.text, // text
+        0 // pressedReleased
     };
     keyboardStack.push( ke );
     return true;
@@ -151,9 +151,9 @@ bool InputManager::keyPressed( const OIS::KeyEvent &e ) {
  
 bool InputManager::keyReleased( const OIS::KeyEvent &e ) {
     keyEvent_t ke = {
-        .keycode = e.key,
-        .text = e.text,
-        .pressedReleased = 1
+        e.key, // keycode
+        e.text, // text
+        1 // pressedReleased
     };
     keyboardStack.push( ke );
     return true;
@@ -175,11 +175,11 @@ bool InputManager::mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID i
 }
 bool InputManager::mouseMoved( const OIS::MouseEvent &e ) {
     mouseEvent_t me = {
-        .X = { e.state.X.abs, e.state.X.rel, e.state.X.absOnly },
-        .Y = { e.state.Y.abs, e.state.Y.rel, e.state.Y.absOnly },
-        .Z = { e.state.Z.abs, e.state.Z.rel, e.state.Z.absOnly },
-        .buttonId = 0,
-        .pressedReleasedMoved = 2
+        { e.state.X.abs, e.state.X.rel, e.state.X.absOnly }, // X
+        { e.state.Y.abs, e.state.Y.rel, e.state.Y.absOnly }, // Y
+        { e.state.Z.abs, e.state.Z.rel, e.state.Z.absOnly }, // Z
+        0 // buttonId
+        2 // pressedReleasedMoved
     };
     mouseStack.push( me );
     return true;
