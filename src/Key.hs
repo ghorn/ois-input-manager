@@ -8,8 +8,8 @@ module Key ( KeyEvent(..)
 import Data.Typeable ( Typeable )
 import Data.Data ( Data )
 
-data KeyEvent = Pressed Key
-              | Released Key
+data KeyEvent = KeyPressed Key
+              | KeyReleased Key
               deriving (Show, Eq, Ord, Data, Typeable)
 
 data Key = KC_UNASSIGNED   -- = 0x00

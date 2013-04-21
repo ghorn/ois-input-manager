@@ -21,7 +21,8 @@ library
   extra-libraries: OIS
 
   exposed-modules:     OISInputManager
-  other-modules:       Key
+  other-modules:       Key,
+                       Mouse
 
 --  ghc-options: -pgml g++
   cc-options:          -Wall

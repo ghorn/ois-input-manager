@@ -138,14 +138,14 @@ int InputManager::getNumOfJoysticks( void ) {
     // Cast to keep compiler happy ^^
     return (int) mJoysticks.size();
 }
- 
+
 bool InputManager::keyPressed( const OIS::KeyEvent &e ) {
     keyEvent_t ke = {
         .keycode = e.key,
         .text = e.text,
-        .pressed = 1,
+        .pressedReleased = 0
     };
-    keyboardStack.push(ke);
+    keyboardStack.push( ke );
     return true;
 }
  
@@ -153,24 +153,35 @@ bool InputManager::keyReleased( const OIS::KeyEvent &e ) {
     keyEvent_t ke = {
         .keycode = e.key,
         .text = e.text,
-        .pressed = 0,
+        .pressedReleased = 1
     };
-    keyboardStack.push(ke);
+    keyboardStack.push( ke );
     return true;
 }
 
-bool InputManager::mouseMoved( const OIS::MouseEvent &e ) {
-    std::cout << "mouse moved, yay\n";
-    return true;
-}
- 
 bool InputManager::mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
-    std::cout << "mouse pressed, yay\n";
+    mouseEvent_t me;
+    me.buttonId = id;
+    me.pressedReleasedMoved = 0;
+    mouseStack.push( me );
     return true;
 }
- 
 bool InputManager::mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
-    std::cout << "mouse released, yay\n";
+    mouseEvent_t me;
+    me.buttonId = id;
+    me.pressedReleasedMoved = 1;
+    mouseStack.push( me );
+    return true;
+}
+bool InputManager::mouseMoved( const OIS::MouseEvent &e ) {
+    mouseEvent_t me = {
+        .X = { e.state.X.abs, e.state.X.rel, e.state.X.absOnly },
+        .Y = { e.state.Y.abs, e.state.Y.rel, e.state.Y.absOnly },
+        .Z = { e.state.Z.abs, e.state.Z.rel, e.state.Z.absOnly },
+        .buttonId = 0,
+        .pressedReleasedMoved = 2
+    };
+    mouseStack.push( me );
     return true;
 }
  

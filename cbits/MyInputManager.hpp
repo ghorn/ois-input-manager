@@ -13,8 +13,22 @@
 typedef struct {
     unsigned int keycode;
     unsigned int text;
-    int pressed;
+    int pressedReleased;
 } keyEvent_t;
+
+typedef struct {
+    int abs;
+    int rel;
+    int absOnly; // Indicates if this Axis only supports Absolute (ie JoyStick)
+} axis_t;
+
+typedef struct {
+    axis_t X;
+    axis_t Y;
+    axis_t Z;
+    int buttonId;
+    int pressedReleasedMoved;
+} mouseEvent_t;
 
 class InputManager : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener {
 public:
@@ -33,6 +47,7 @@ public:
     int getNumOfJoysticks( void );
  
     std::stack<keyEvent_t> keyboardStack;
+    std::stack<mouseEvent_t> mouseStack;
 private:
 
     bool keyPressed( const OIS::KeyEvent &e );
