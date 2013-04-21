@@ -1,0 +1,28 @@
+name:                ois-input-manager
+version:             0.1.0.0
+synopsis:            wrapper for OIS input manager for use with HOGRE
+-- description:         
+license:             BSD3
+license-file:        LICENSE
+author:              Greg Horn
+maintainer:          gregmainland@gmail.com
+-- copyright:           
+-- category:            
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  hs-source-dirs:    src
+  C-sources:         cbits/inputManagerInterface.cpp
+                     cbits/MyInputManager.cpp
+--                     cbits/InputManager.cpp
+  include-dirs:      /usr/include/OIS
+                     /usr/include/OGRE
+  extra-libraries: OIS
+
+  exposed-modules:     OISInputManager
+  other-modules:       Key
+
+--  ghc-options: -pgml g++
+  cc-options:          -Wall
+  build-depends:       base ==4.6.*, hogre
