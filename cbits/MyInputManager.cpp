@@ -140,9 +140,8 @@ int InputManager::getNumOfJoysticks( void ) {
 }
 
 bool InputManager::keyPressed( const OIS::KeyEvent &e ) {
-    int blah = e.key;
     keyEvent_t ke = {
-        .keycode = 4, //e.key,
+        .keycode = e.key,
         .text = e.text,
         .pressedReleased = 0
     };
