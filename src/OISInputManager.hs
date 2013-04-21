@@ -11,7 +11,7 @@ module OISInputManager ( InputManager
                        , Key(..)
                        , getKeyEvents
                        , getPressedKeys
-                       , getKeyStates
+--                       , getKeyStates
                          -- * mouse
                        , MouseAxis(..)
                        , MouseAxes(..)
