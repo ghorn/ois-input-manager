@@ -159,14 +159,16 @@ bool InputManager::keyReleased( const OIS::KeyEvent &e ) {
     return true;
 }
 
-bool InputManager::mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
+bool InputManager::mousePressed( const OIS::MouseEvent &e __attribute__((unused)),
+                                 OIS::MouseButtonID id ) {
     mouseEvent_t me;
     me.buttonId = id;
     me.pressedReleasedMoved = 0;
     mouseStack.push( me );
     return true;
 }
-bool InputManager::mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
+bool InputManager::mouseReleased( const OIS::MouseEvent &e __attribute__((unused)),
+                                  OIS::MouseButtonID id ) {
     mouseEvent_t me;
     me.buttonId = id;
     me.pressedReleasedMoved = 1;
