@@ -30,7 +30,7 @@ import Foreign.Storable ( peek )
 
 import Graphics.Ogre.Types ( RenderWindow(..) )
 
-import Key( KeyEvent(..), Key(..) )
+import Key( KeyEvent(..), Key(..), decodeKey )
 import Mouse( MouseEvent(..), MouseButton(..), MouseAxis(..), MouseAxes(..) )
 
 data InputManagerRaw
@@ -75,15 +75,15 @@ getPressedKeys im = do
   ks <- getKeyStates im
   let go :: Int -> [CChar] -> [Key] -> [Key]
       go n (0:xs) acc = go (n+1) xs acc
-      go n (1:xs) acc = go (n+1) xs ((toEnum n):acc)
+      go n (1:xs) acc = go (n+1) xs ((decodeKey n):acc)
       go _ [] acc = acc
       go _ (ret:_) _ =
         error $ "the \"impossible\" happened, getPressedKeys got non-zero return code: "++show ret
   return $ go 0 ks []
 
 convertKey :: CUInt -> CUInt -> CInt -> KeyEvent
-convertKey keycode _text 0 = KeyPressed (toEnum (fromIntegral keycode))
-convertKey keycode _text 1 = KeyReleased (toEnum (fromIntegral keycode))
+convertKey keycode _text 0 = KeyPressed  (decodeKey (fromIntegral keycode))
+convertKey keycode _text 1 = KeyReleased (decodeKey (fromIntegral keycode))
 convertKey _ _ ret =
   error $ "the \"impossible\" happened, convertKey got unhandled return code: "++show ret
 
