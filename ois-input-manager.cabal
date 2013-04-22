@@ -1,21 +1,24 @@
 name:                ois-input-manager
 version:             0.1.0.0
-synopsis:            wrapper for OIS input manager for use with HOGRE
--- description:         
+synopsis:            wrapper for OIS input manager for use with hogre
 license:             BSD3
 license-file:        LICENSE
 author:              Greg Horn
 maintainer:          gregmainland@gmail.com
--- copyright:           
+copyright:           Copyright (c) 2013, Greg Horn
 -- category:            
 build-type:          Simple
 cabal-version:       >=1.8
+description: {
+This library is a wrapper around hand-written C++ code which manages an OIS::InputManager.
+It enables you to use buffered or unbuffered mouse and keyboard input with a window created with hogre.
+See the Haddock documentation for usage.
+}
 
 library
   hs-source-dirs:    src
   C-sources:         cbits/inputManagerInterface.cpp
                      cbits/MyInputManager.cpp
---                     cbits/InputManager.cpp
   include-dirs:      /usr/include/OIS
                      /usr/include/OGRE
   extra-libraries:   OIS
