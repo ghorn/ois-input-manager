@@ -6,7 +6,7 @@ license-file:        LICENSE
 author:              Greg Horn
 maintainer:          gregmainland@gmail.com
 copyright:           Copyright (c) 2013, Greg Horn
--- category:            
+category:            Graphics, Game
 build-type:          Simple
 cabal-version:       >=1.8
 description: {
@@ -32,3 +32,7 @@ library
 --  ghc-options: -pgml g++
   cc-options:          -Wall
   build-depends:       base >= 4.5.0 && < 4.7, hogre
+
+source-repository head
+  type: git
+  location: git://github.com/ghorn/ois-input-manager.git
