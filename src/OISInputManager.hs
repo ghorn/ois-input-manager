@@ -23,10 +23,12 @@ module OISInputManager ( -- * Input Manager
                        ) where
 
 import Control.Applicative ( (<$>) )
+import Data.Maybe ( fromMaybe )
 import Foreign.Ptr ( Ptr )
+import Foreign.C.String ( newCString )
 import Foreign.C.Types ( CChar, CInt(..), CUInt )
 import Foreign.Marshal ( malloc, free )
-import Foreign.Marshal.Array ( mallocArray, peekArray )
+import Foreign.Marshal.Array ( mallocArray, newArray, peekArray )
 import Foreign.Storable ( peek )
 
 import Graphics.Ogre.Types ( RenderWindow(..) )
@@ -38,7 +40,7 @@ data InputManagerRaw
 newtype InputManager = InputManager (Ptr InputManagerRaw)
 
 foreign import ccall unsafe "newInputManager" c_newInputManager
-  :: Ptr RenderWindow -> IO (Ptr InputManagerRaw)
+  :: Ptr RenderWindow -> Ptr (Ptr CChar) -> Ptr (Ptr CChar) -> CInt -> IO (Ptr InputManagerRaw)
 foreign import ccall unsafe "destroyInputManager" c_destroyInputManager
   :: Ptr InputManagerRaw -> IO ()
 foreign import ccall unsafe "capture" c_capture
@@ -52,10 +54,20 @@ foreign import ccall unsafe "copyMouseState" c_copyMouseState
 foreign import ccall unsafe "popMouseStack" c_popMouseStack
   :: Ptr InputManagerRaw -> Ptr CInt -> Ptr CInt -> Ptr CInt -> IO CInt
 
--- | Create an input manager for an Ogre window
-newInputManager :: RenderWindow -> IO InputManager
-newInputManager (RenderWindow ptr) = do
-  imRaw <- c_newInputManager ptr
+-- | Create an input manager for an Ogre window, optionally taking a list of options
+newInputManager :: RenderWindow -> Maybe [(String,String)] -> IO InputManager
+newInputManager (RenderWindow windowPtr) maybeOpts = do
+  let opts = fromMaybe [] maybeOpts
+  optKeys <- mapM (newCString . fst) opts
+  optVals <- mapM (newCString . snd) opts
+  optKeysArray <- newArray optKeys
+  optValsArray <- newArray optVals
+  imRaw <- c_newInputManager windowPtr
+           optKeysArray optValsArray (fromIntegral (length opts))
+  free optKeysArray
+  free optValsArray
+  mapM_ free optKeys
+  mapM_ free optVals
   return (InputManager imRaw)
 
 -- | Destroy a window manager

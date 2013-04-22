@@ -35,7 +35,8 @@ public:
     InputManager( void );
     ~InputManager( void );
  
-    void initialize( Ogre::RenderWindow *renderWindow );
+    void initialize( Ogre::RenderWindow *renderWindow,
+                     char * optKeys[], char * optVals[], int nOpts );
     void capture( void );
  
     void setWindowExtents( int width, int height );

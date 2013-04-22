@@ -2,7 +2,8 @@
 
 extern "C" {
     // input manager
-    InputManager * newInputManager( Ogre::RenderWindow *renderWindow );
+    InputManager * newInputManager( Ogre::RenderWindow *renderWindow,
+                                    char * optKeys[], char * optVals[], int nOpts );
     void destroyInputManager( InputManager * im );
     void capture( InputManager * im );
     // keyboard
@@ -13,9 +14,10 @@ extern "C" {
     int popMouseStack( InputManager * im, int axes[9], int * buttonId, int * pressedReleasedMoved );
 }
 
-InputManager * newInputManager( Ogre::RenderWindow *renderWindow ){
+InputManager * newInputManager( Ogre::RenderWindow *renderWindow,
+                                char * optKeys[], char * optVals[], int nOpts ){
     InputManager * im = new InputManager();
-    im->initialize(renderWindow);
+    im->initialize(renderWindow, optKeys, optVals, nOpts);
     return im;
 }
 

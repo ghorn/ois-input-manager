@@ -35,7 +35,8 @@ InputManager::InputManager( void ) :
     mInputSystem( 0 ) {
 }
  
-void InputManager::initialize( Ogre::RenderWindow *renderWindow ) {
+void InputManager::initialize( Ogre::RenderWindow *renderWindow,
+                               char * optKeys[], char * optVals[], int nOpts ){
     // Setup basic variables
     OIS::ParamList paramList;    
     size_t windowHnd = 0;
@@ -47,6 +48,8 @@ void InputManager::initialize( Ogre::RenderWindow *renderWindow ) {
     // Fill parameter list
     windowHndStr << (unsigned int) windowHnd;
     paramList.insert( std::make_pair( std::string( "WINDOW" ), windowHndStr.str() ) );
+    for (int k=0; k<nOpts; k++)
+        paramList.insert(std::make_pair(std::string(optKeys[k]),std::string(optVals[k])));
 
     // Create inputsystem
     mInputSystem = OIS::InputManager::createInputSystem( paramList );
