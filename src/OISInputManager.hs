@@ -2,23 +2,24 @@
 {-# Language ForeignFunctionInterface #-}
 {-# Language EmptyDataDecls #-}
 
-module OISInputManager ( InputManager
+module OISInputManager ( -- * Input Manager
+                         InputManager
                        , newInputManager
                        , destroyInputManager
                        , capture
-                         -- * keyboard
-                       , KeyEvent(..)
-                       , Key(..)
+                         -- * Mouse
+                       , getMouseEvents
+                       , getMouseState
+                       , MouseEvent(..)
+                       , MouseButton(..)
+                       , MouseAxis(..)
+                       , MouseAxes(..)
+                         -- * Keyboard
                        , getKeyEvents
                        , getPressedKeys
 --                       , getKeyStates
-                         -- * mouse
-                       , MouseAxis(..)
-                       , MouseAxes(..)
-                       , MouseEvent(..)
-                       , MouseButton(..)
-                       , getMouseEvents
-                       , getMouseState
+                       , KeyEvent(..)
+                       , Key(..)
                        ) where
 
 import Control.Applicative ( (<$>) )
@@ -51,14 +52,17 @@ foreign import ccall unsafe "copyMouseState" c_copyMouseState
 foreign import ccall unsafe "popMouseStack" c_popMouseStack
   :: Ptr InputManagerRaw -> Ptr CInt -> Ptr CInt -> Ptr CInt -> IO CInt
 
+-- | Create an input manager for an Ogre window
 newInputManager :: RenderWindow -> IO InputManager
 newInputManager (RenderWindow ptr) = do
   imRaw <- c_newInputManager ptr
   return (InputManager imRaw)
 
+-- | Destroy a window manager
 destroyInputManager :: InputManager -> IO ()
 destroyInputManager (InputManager imRaw) = c_destroyInputManager imRaw
 
+-- | Capture all for this `InputManager` (call this before querying devices)
 capture :: InputManager -> IO ()
 capture (InputManager imRaw) = c_capture imRaw
 
@@ -70,6 +74,7 @@ getKeyStates (InputManager imRaw) = do
   c_copyKeyStates imRaw keys
   peekArray len keys
 
+-- | Get a list of all keys currently pressed (unbuffered input)
 getPressedKeys :: InputManager -> IO [Key]
 getPressedKeys im = do
   ks <- getKeyStates im
@@ -87,6 +92,7 @@ convertKey keycode _text 1 = KeyReleased (decodeKey (fromIntegral keycode))
 convertKey _ _ ret =
   error $ "the \"impossible\" happened, convertKey got unhandled return code: "++show ret
 
+-- | Get a list of key events since the last `getKeyEvents` was called (buffered input)
 getKeyEvents :: InputManager -> IO [KeyEvent]
 getKeyEvents (InputManager imRaw) = do
   keycode <- malloc
@@ -125,6 +131,7 @@ convertMouse badAxes _ 2 =
 convertMouse _ _ ret =
   error $ "the \"impossible\" happened, convertMouse got unhandled return code: "++show ret
 
+-- | Get a list of mouse events since the last `getMouseEvents` was called (buffered input)
 getMouseEvents :: InputManager -> IO [MouseEvent]
 getMouseEvents (InputManager imRaw) = do
   let axesLen = 9
@@ -149,6 +156,7 @@ getMouseEvents (InputManager imRaw) = do
 
   return mouseEvents
 
+-- | Get the current state of the mouse (unbuffered input)
 getMouseState :: InputManager -> IO (MouseAxes, (Int,Int), [MouseButton])
 getMouseState (InputManager imRaw) = do
   let axesLen = 9

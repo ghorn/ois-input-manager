@@ -10,6 +10,7 @@ module Mouse ( MouseEvent(..)
 import Data.Typeable ( Typeable )
 import Data.Data ( Data )
 
+-- | absolute and relative pointer positions
 data MouseAxis = MouseAxis Int Int deriving (Show, Eq, Ord, Data, Typeable)
 data MouseAxes = MouseAxes { axisX :: MouseAxis
                            , axisY :: MouseAxis
