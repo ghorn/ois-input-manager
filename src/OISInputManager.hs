@@ -92,7 +92,7 @@ getPressedKeys im = do
   ks <- getKeyStates im
   let go :: Int -> [CChar] -> [Key] -> [Key]
       go n (0:xs) acc = go (n+1) xs acc
-      go n (1:xs) acc = go (n+1) xs ((decodeKey n):acc)
+      go n (1:xs) acc = go (n+1) xs (decodeKey n : acc)
       go _ [] acc = acc
       go _ (ret:_) _ =
         error $ "the \"impossible\" happened, getPressedKeys got non-zero return code: "++show ret
@@ -118,7 +118,7 @@ getKeyEvents (InputManager imRaw) = do
           then do keycode' <- peek keycode
                   text'    <- peek text
                   pressed' <- peek pressed
-                  getMoar ((convertKey keycode' text' pressed'):acc)
+                  getMoar (convertKey keycode' text' pressed' : acc)
           else return acc
   keyEvents <- getMoar []
 
@@ -134,10 +134,10 @@ convertMouse :: [Int] -> CInt -> CInt -> MouseEvent
 convertMouse _ buttonId 0 = ButtonPressed  (toEnum (fromIntegral buttonId))
 convertMouse _ buttonId 1 = ButtonReleased (toEnum (fromIntegral buttonId))
 convertMouse [a1,a2,_,a4,a5,_,a7,a8,_] _ 2 =
-  MouseMoved $ MouseAxes { axisX = MouseAxis a1 a2
-                         , axisY = MouseAxis a4 a5
-                         , axisZ = MouseAxis a7 a8
-                         }
+  MouseMoved MouseAxes { axisX = MouseAxis a1 a2
+                       , axisY = MouseAxis a4 a5
+                       , axisZ = MouseAxis a7 a8
+                       }
 convertMouse badAxes _ 2 =
   error $ "the \"impossible\" happened, convertMouse got bad number of axes: "++show badAxes
 convertMouse _ _ ret =
@@ -158,7 +158,7 @@ getMouseEvents (InputManager imRaw) = do
           then do axes' <- peekArray axesLen axes
                   buttonId' <- peek buttonId
                   pressedReleasedMoved' <- peek pressedReleasedMoved
-                  getMoar ((convertMouse (map fromIntegral axes') buttonId' pressedReleasedMoved'):acc)
+                  getMoar (convertMouse (map fromIntegral axes') buttonId' pressedReleasedMoved' : acc)
           else return acc
   mouseEvents <- getMoar []
 
