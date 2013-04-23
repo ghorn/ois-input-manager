@@ -17,6 +17,8 @@ See the Haddock documentation for usage.
 This is a preview release.
 }
 
+extra-source-files: cbits/MyInputManager.hpp
+
 library
   hs-source-dirs:    src
   C-sources:         cbits/inputManagerInterface.cpp
